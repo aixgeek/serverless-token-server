@@ -68,7 +68,7 @@ export class ApiHandler {
         const db_query = this.secretRepo.createQueryBuilder('secret')
 
         if (realm) {
-            db_query.where("secret.realmId = :realm", { realm })
+            db_query.where("secret.realm = :realm", { realm })
         }
 
         db_query
@@ -99,27 +99,24 @@ export class ApiHandler {
      */
     @Get('/token')
     async getToken(@Query() query: { key: string, realm: string, flush?: boolean }) {
-        let token: string, expires_in: number
-        const secret = await this.secretRepo.findOne({ where: { key: query.key } })
+        const secret = await this.secretRepo.findOne({ where: { key: query.key, realm: query.realm } })
         if (!secret) {
             throw new MidwayHttpError('该 key 指定的 secret 不存在', HttpStatus.BAD_REQUEST)
         }
-        token = secret.token
-        if (!query.flush && token) {
-            if (secret.expires_at) {
-                expires_in = secret.expires_at - new Date().getTime()
-                if (expires_in > MIN_TTL) {
-                    return { token, expires_in, source: 'database' }
-                }
+        if (!query.flush && secret.token && secret.expires_at) {
+            let token = secret.token
+            let expires_in = secret.expires_at - new Date().getTime()
+            if (expires_in > MIN_TTL) {
+                return { token, expires_in, source: 'database' }
             }
         }
 
-        const realm = await this.realmRepo.findOne({ select: ['config', 'logic_code'], where: { id: query.realm } })
+        const realm = await this.realmRepo.findOne({ select: ['id', 'config', 'logic_code'], where: { id: query.realm } })
         if (!realm.config && !realm.logic_code) {
             throw new MidwayHttpError('固定 token 模式不支持上游服务商', HttpStatus.EXPECTATION_FAILED)
         }
-
         // 优先使用配置模式
+        let token: string, expires_in: number
         if (realm.config) {
             const config = realm.config as {
                 url: string,
@@ -163,9 +160,7 @@ export class ApiHandler {
                 dataType: 'json',
                 headers: header
             })
-            if (data.errcode !== 0) {
-                throw new MidwayHttpError(data.errmsg, HttpStatus.SERVICE_UNAVAILABLE)
-            }
+
             token = data[config.token_path]
             expires_in = data[config.expires_in_path] * 1000
         } else {
@@ -178,8 +173,11 @@ export class ApiHandler {
             token = data.token
             expires_in = data.expires_in * 1000
         }
+        if (!token) {
+            throw new MidwayHttpError('无法从上游服务获取 token', HttpStatus.SERVICE_UNAVAILABLE)
+        }
 
-        secret.realm = realm
+        secret.realm = realm.id
         secret.token = token
         secret.expires_at = new Date().getTime() + expires_in
         await this.secretRepo.save(secret)

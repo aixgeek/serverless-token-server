@@ -11,6 +11,7 @@ CREATE TABLE `realm` (
 
 CREATE TABLE `secret` (
 	`key` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	`realm` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 	`key_1` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	`key_2` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	`key_3` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
@@ -20,10 +21,8 @@ CREATE TABLE `secret` (
 	`updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`token` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
 	`expires_at` bigint NULL,
-	`realmId` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-	PRIMARY KEY (`key`),
-	KEY `idx_secret_realm`(`realmId`) USING BTREE,
-	CONSTRAINT `realmId` FOREIGN KEY (`realmId`) REFERENCES `weibanzhushou`.`realm` (`id`) ON DELETE NO_ACTION ON UPDATE NO_ACTION
+	PRIMARY KEY (`key`,`realm`),
+	KEY `idx_secret_realm`(`realm`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC AVG_ROW_LENGTH=0;
 
 INSERT INTO `realm` (`comment`, `config`, `id`) VALUES ('企业微信-企业内部开发接口的调用凭据（access_token）

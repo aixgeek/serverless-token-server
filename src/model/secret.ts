@@ -1,10 +1,12 @@
-import { Column, CreateDateColumn, Index, ManyToOne, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Index, UpdateDateColumn } from "typeorm";
 import { EntityModel } from "@midwayjs/orm";
-import { Realm } from "./realm";
 
 @Index("idx_secret_realm", ["realm"], {})
 @EntityModel("secret", { schema: "weibanzhushou" })
 export class Secret {
+
+  @Column("varchar", { primary: true, name: "realm", length: 50 })
+  realm: string;
 
   @Column("varchar", { primary: true, name: "key", length: 200 })
   key: string;
@@ -41,7 +43,4 @@ export class Secret {
 
   @Column("bigint", { name: "expires_at", nullable: true })
   expires_at: number | null;
-
-  @ManyToOne(type => Realm, realm => realm.secrets)
-  realm: Realm;
 }
