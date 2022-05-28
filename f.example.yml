@@ -4,11 +4,11 @@ service:
 provider:
   name: aliyun
   environment:
-    MYSQL_HOST: rm-bp15pc6l8re2969us5o.mysql.rds.aliyuncs.com
-    MYSQL_PORT: 3306
-    MYSQL_USERNAME: weibanzhushou
-    MYSQL_PASSWORD: qqrda_ZbX6@ALe@
-    MYSQL_DATABASE: weibanzhushou
+    MYSQL_HOST:
+    MYSQL_PORT:
+    MYSQL_USERNAME:
+    MYSQL_PASSWORD:
+    MYSQL_DATABASE: 
 
 custom:
   customDomain:

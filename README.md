@@ -1,5 +1,36 @@
 # 使用 Serverless 构建第三方 Token 缓存服务
 
+
+
+## 服务拓扑
+
+```mermaid
+graph TB
+App(使用 Token Server 服务的外部应用) --> token-server-cache
+Admin(Token Server 管理端) --> token-server
+App --> token-server(serverless-token-server)
+token-server-cache --token,expires_in--> App
+token-server --token,expires_in--> App
+
+token-server-cache(serverless-token-server-cache) ---> token-server
+token-server --> cache{Cache}
+cache --hit--> Database((Datebase))
+cache --miss--> Upstream
+cache --token,expires_in--> token-server
+Upstream --token,expires_in--> Database
+
+classDef box stroke:#333,stroke-width:4px;
+classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+class cache orange
+class Upstream box
+
+```
+
+## 特性
+
+- 缓存官方返回的数据，在有效时间内复用
+- 防集中过期导致的爆发性请求
+
 ## 支持平台（已验证）
 
 ### 企业微信 API-企业内部开发
@@ -141,6 +172,7 @@ curl -H 'Content-Type: application/json' --data-binary '
 ```
 
 3.获取 Token
+
 #### Request
 
 - Method: **GET**
@@ -151,7 +183,7 @@ curl -H 'Content-Type: application/json' --data-binary '
 {
   "realm": "wxgzh", // Token 上游服务提供商 id
   "key": "wxgzh_secret", // 获取本 Token Server 的 Token 标识
-  "flush": false, // 强制刷新 token，立即从上游服务商获取最新的 token
+  "flush": false // 强制刷新 token，立即从上游服务商获取最新的 token
 }
 ```
 
@@ -161,37 +193,8 @@ curl -H 'Content-Type: application/json' --data-binary '
 
 ```json
 {
-    "token": "***",
-    "expires_in": 7200000, // 毫秒级单位
-    "source": "database"
+  "token": "***",
+  "expires_in": 7200000, // 毫秒级单位
+  "source": "database"
 }
 ```
-
-## 服务拓扑
-
-```mermaid
-graph TB
-App(使用 Token Server 服务的外部应用) --> token-server-cache
-Admin(Token Server 管理端) --> token-server
-App --> token-server(serverless-token-server)
-token-server-cache --token,expires_in--> App
-token-server --token,expires_in--> App
-
-token-server-cache(serverless-token-server-cache) ---> token-server
-token-server --> cache{Cache}
-cache --hit--> Database((Datebase))
-cache --miss--> Upstream
-cache --token,expires_in--> token-server
-Upstream --token,expires_in--> Database
-
-classDef box stroke:#333,stroke-width:4px;
-classDef orange fill:#f96,stroke:#333,stroke-width:4px;
-class cache orange
-class Upstream box
-
-```
-
-## 特性
-
-- 缓存官方返回的数据，在有效时间内复用
-- 防集中过期导致的爆发性请求

@@ -6,7 +6,9 @@ import * as orm from '@midwayjs/orm';
 import * as validate from '@midwayjs/validate';
 import { join } from 'path';
 
-dotenv.config();
+if (process.env.NODE_ENV === 'local') {
+  dotenv.config();
+}
 
 @Configuration({
   imports: [faas, orm, validate],
