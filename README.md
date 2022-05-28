@@ -1,3 +1,4 @@
+# 使用 Serverless 构建第三方 Token 缓存服务
 ## 服务拓扑
 
 ```text
@@ -9,8 +10,8 @@
                     │                                              │ miss
 Admin  ─────────────┤                                              │
                     │
-Inner Apps ─────────┴─────────────► /api/* ────────────────────► /api/* ────────► Database
-                          │  token-server-cache(Golang)         (Python)   hit
+Inner Apps ─────────┴─────────────► /api/* ────────────────────► /api/* ────────────────► Database
+                          │  token-server-cache(Golang)         (Typescript)   hit        (Mysql)
                           │                                        ▲
                           │                                        │
                           │                                        │
