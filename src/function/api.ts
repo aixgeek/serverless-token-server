@@ -94,7 +94,8 @@ export class ApiHandler {
     }
 
     /**
-     * 从数据库存活数据、上游服务商（支持自定义FaaS和配置查询），依次查询 token，存在即返回。注意需要设置正确的 expires_in
+     * 从数据库存活数据、上游服务商（支持自定义FaaS和配置查询，优先选择配置查询），依次查询 token，存在即返回。
+     * 注意需要设置正确的 expires_in
      */
     @Get('/token')
     async getToken(@Query() query: { key: string, realm: string, flush?: boolean }) {

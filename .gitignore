@@ -19,3 +19,4 @@ run/
 **/config.local.ts
 .s/
 .vscode/
+.env
