@@ -12,15 +12,12 @@ if (process.env.NODE_ENV === 'local') {
 
 @Configuration({
   imports: [faas, orm, validate],
-  importConfigs: [
-    join(__dirname, './config/'),
-  ],
+  importConfigs: [join(__dirname, './config/')],
   conflictCheck: true,
 })
 export class ContainerLifeCycle implements ILifeCycle {
-
   @App()
-  app: faas.Application
+  app: faas.Application;
 
   async onReady() {
     // this.app.useFilter([ErrorFilter])
