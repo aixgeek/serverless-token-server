@@ -1,4 +1,9 @@
-import { HttpStatus, makeHttpRequest, MidwayHttpError } from '@midwayjs/core';
+import {
+  HttpStatus,
+  ILogger,
+  makeHttpRequest,
+  MidwayHttpError,
+} from '@midwayjs/core';
 import {
   Body,
   Controller,
@@ -18,11 +23,15 @@ import { Secret } from '../model/secret';
 import { CodeHandler } from './code';
 
 const MIN_TTL = 3600000;
+let reqId = 0;
 
 @Controller('/api')
 export class ApiHandler {
   @Inject()
   ctx: Context;
+
+  @Inject()
+  logger: ILogger;
 
   @InjectEntityModel(Realm)
   realmRepo: Repository<Realm>;
@@ -188,7 +197,6 @@ export class ApiHandler {
         dataType: 'json',
         headers: header,
       });
-
       token = data[config.token_path];
       expires_in = data[config.expires_in_path] * 1000;
     } else {
@@ -201,6 +209,11 @@ export class ApiHandler {
       token = data.token;
       expires_in = data.expires_in * 1000;
     }
+    reqId++;
+    this.logger.info(
+      `reqId: ${reqId}; token： ${token}; expires_in: ${expires_in}`
+    );
+
     if (!token) {
       throw new MidwayHttpError(
         '无法从上游服务获取 token',
@@ -211,7 +224,7 @@ export class ApiHandler {
     secret.realm = realm.id;
     secret.token = token;
     secret.expires_at = new Date().getTime() + expires_in;
-    await this.secretRepo.save(secret);
+    this.secretRepo.save(secret);
 
     return { token, expires_in, source: 'upstream' };
   }
