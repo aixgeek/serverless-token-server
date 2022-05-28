@@ -1,0 +1,17 @@
+service:
+  name: weibanzhushou
+
+provider:
+  name: aliyun
+
+custom:
+  customDomain:
+    domainName: auto
+
+aggregation: ## 对 HTTP 函数使用聚合模式部署
+  api:
+    functionsPattern:
+      - 'apiHandler-*'
+  code:
+    functionsPattern:
+      - 'codeHandler-*'
