@@ -76,6 +76,13 @@ export class ApiHandler {
 
   @Post('/secret')
   async createOrUpdateSecret(@Body() body: Secret) {
+    const realm = await this.realmRepo.findOne({
+      select: ['id'],
+      where: { id: body.realm },
+    });
+    if (!realm) {
+      throw new MidwayHttpError('realm 不存在', HttpStatus.BAD_REQUEST);
+    }
     const entity = await this.secretRepo.save(body);
     return entity;
   }
@@ -123,8 +130,9 @@ export class ApiHandler {
    */
   @Get('/token')
   async getToken(
-    @Query() query: { key: string; realm: string; flush?: boolean }
+    @Query() query: { key: string; realm: string; flush?: string }
   ) {
+    const flush = query.flush === 'true';
     const secret = await this.secretRepo.findOne({
       where: { key: query.key, realm: query.realm },
     });
@@ -134,7 +142,7 @@ export class ApiHandler {
         HttpStatus.BAD_REQUEST
       );
     }
-    if (!query.flush && secret.token && secret.expires_at) {
+    if (!flush && secret.token && secret.expires_at) {
       const token = secret.token;
       const expires_in = secret.expires_at - new Date().getTime();
       if (expires_in > MIN_TTL) {
