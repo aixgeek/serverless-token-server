@@ -42,19 +42,19 @@ class Upstream box
 1.使用 ab 测试工具并发设置 300，连续请求 5s，粗略得到 QPS 为 1700：
 - 为什么设置并发数为 300，因为阿里云函数计算默认最大并发为 300
 
-![ab](/doc/assets/ab.png)
+![ab](https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/ab%20%E6%B5%8B%E8%AF%95.png)
 
 2.阿里云函数计算监控指标：
 - 请求次数约 1 万次
 - 函数并发实例 250 个
 - 函数错误次数 0 次
 
-![faas](/doc/assets/faas.png) 
+![faas](https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/faas.png) 
 
 3.函数计算费用预估
 - 1 万次函数调用费用预估约 1.39 元
 
-![cost](/doc/assets/cost.png) 
+![cost](https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/cost.png) 
 
 ## 支持平台（已验证）
 
