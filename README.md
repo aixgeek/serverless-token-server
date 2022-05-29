@@ -1,5 +1,11 @@
 # 使用 Serverless 构建第三方 Token 缓存服务
 
+> 通常地，第三方平台 API 认证采用 `OIDC` 协议，应用需要携带 Token 访问资源 API，资源服务 API 会通过拦截器查验 Token 中的 `scope` 字段是否包含特定的权限项目，从而决定是否返回资源。第三方平台通常会对 Token 的获取限制频率。
+
+本服务作为获取其它服务商 Api Token 的桥梁，提供 Token 的获取和缓存等功能，并内嵌灵活的配置以覆盖大部分的从其他服务商获取 Token 的场景。
+
+开源地址：[https://github.com/Geeeeeeeeeek/serverless-token-server](https://github.com/Geeeeeeeeeek/serverless-token-server)
+
 本服务作为获取其它服务商 Api token 的桥梁，提供 token 的获取和缓存等功能，并内嵌灵活的配置以覆盖大部分的从其他服务商获取 token 的场景。
 
 ## 特性
@@ -233,3 +239,11 @@ curl -H 'Content-Type: application/json' --data-binary '
   "source": "database"
 }
 ```
+
+---
+
+欢迎关注我的公众号“**Serverless Cloud**”，原创技术文章第一时间推送。
+
+<center>
+    <img src="https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/qrcode.jpg" style="width: 100px;">
+</center>
