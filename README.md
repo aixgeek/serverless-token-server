@@ -4,16 +4,14 @@
 
 本服务作为获取其它服务商 Api Token 的桥梁，提供 Token 的获取和缓存等功能，并内嵌灵活的配置以覆盖大部分的从其他服务商获取 Token 的场景。
 
-开源地址：[https://github.com/Geeeeeeeeeek/serverless-token-server](https://github.com/Geeeeeeeeeek/serverless-token-server)
-
-本服务作为获取其它服务商 Api token 的桥梁，提供 token 的获取和缓存等功能，并内嵌灵活的配置以覆盖大部分的从其他服务商获取 token 的场景。
+项目使用阿里巴巴出品的函数计算开发框架 [MidwayJs](https://github.com/midwayjs/midway) 进行函数开发、构建、发布，支持腾讯云、阿里云等多个云服务提供商部署，本服务的开源地址：[https://github.com/Geeeeeeeeeek/serverless-token-server](https://github.com/Geeeeeeeeeek/serverless-token-server)
 
 ## 特性
 
+- Serverless 部署，零成本部署和运维
+- 灵活的服务商配置、自定义密钥存储、Token 等信息通过 mysql 进行持久化
 - 缓存官方返回的数据，在有效时间内复用
 - 防集中过期导致的爆发性请求
-- Serverless 部署，零成本部署和运维
-- 服务商配置、密钥、Token 等信息通过 mysql 进行持久化
 
 ## 服务拓扑
 
