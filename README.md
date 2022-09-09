@@ -52,7 +52,7 @@ class Upstream box
 ![faas](https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/faas.png) 
 
 3.函数计算费用预估
-- 1 万次函数调用费用预估约 1.39 元
+- 1 万次函数调用费用预估约 0.00139 元
 
 ![cost](https://geeeeeeeeeek-github.oss-cn-hangzhou.aliyuncs.com/cost.png) 
 
